@@ -70,11 +70,8 @@ class PyFlare(object):
 class test_PyFlare(unittest.TestCase):
 
     def test_getip(self):
-        self.assertEqual(PyFlare().getip(), '71.209.47.192')
-        
+        self.assertRegexpMatches(PyFlare().getip(), "^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
 
-    def test_getapiendpoint(self):
-        pass
 
 if __name__ == '__main__':
     unittest.main()
