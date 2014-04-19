@@ -5,6 +5,9 @@ import requests
 
 
 class PyFlare(object):
+    """
+    Simple python app to auto update dynamic DNS using the Cloudflare API
+    """
     
     def __init__(self):
         self.tkn = None
@@ -20,17 +23,21 @@ class PyFlare(object):
     def loadcfg(self, cfg=None):
         '''Opens config file and returns cfg for key passed in'''
         cfg = cfg
-        pass
+        self.tkn = 'api_key'
+        self.email = 'email'
+        self.zone = 'zone'
+        self.record = 'record'
+        return cfg_item
 
     def rec_edit(self):
         post = {
         'a': 'rec_edit',
-        'tkn': self.loadcfg(cfg='api_key'),
+        'tkn': self.tkn,
         'id': '', #dns record id
-        'email': self.loadcfg(cfg='email'),
-        'z': self.loadcfg(cfg='zone'),
+        'email': self.email,
+        'z': self.zone,
         'type': 'A',
-        'name': self.loadcfg(cfg='record_name'),
+        'name': self.record,
         'content': self.getip(),
         'service_mode': '1',
         'ttl': '1'
@@ -38,7 +45,12 @@ class PyFlare(object):
         return post
     
     def rec_load_all(self):
-        
+        post = {
+        'a': 'rec_load_all',
+        'tkn': self.tkn,
+        'email': self.email,
+        'z': self.zone
+        }
 
 
 # ------ Unittesting ------ #
