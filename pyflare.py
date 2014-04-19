@@ -10,8 +10,8 @@ class PyFlare(object):
         ip = requests.get('http://icanhazip.com').text.rstrip('\n')
         return ip
     
-    def validpost(self):
-        pass
+    def getapiendpoint(self):
+        api = 'https://www.cloudflare.com/api_json.html'
 
 
 
@@ -23,7 +23,7 @@ class test_PyFlare(unittest.TestCase):
         self.assertEqual(PyFlare().getip(), '71.209.47.192')
         
 
-    def test_validpost(self):
+    def test_getapiendpoint(self):
         pass
 
 if __name__ == '__main__':
