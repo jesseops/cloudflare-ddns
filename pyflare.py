@@ -33,11 +33,11 @@ class PyFlare(object):
     def callapi(self, post):
         url = 'https://www.cloudflare.com/api_json.html'
         try:
-            r = requests.post(url, json.dumps(post))
+            requests.post(url, json.dumps(post))
         except Exception as e:
             print 'Could not POST update, Reason: {}'.format(e)
             sleep(5)
-            r = requests.post(url, json.dumps(post))
+            requests.post(url, json.dumps(post))
         
     
     def rec_edit(self):
@@ -62,6 +62,7 @@ class PyFlare(object):
         'email': self.email,
         'z': self.zone
         }
+        return post
 
 
 # ------ Unittesting ------ #
