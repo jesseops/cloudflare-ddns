@@ -2,6 +2,8 @@
 
 import unittest
 import requests
+import json
+from time import sleep
 
 
 class PyFlare(object):
@@ -13,7 +15,6 @@ class PyFlare(object):
         self.tkn = None
         self.email = None
         self.a = None # API uses this for determining the request type
-        self.url = 'https://www.cloudflare.com/api_json.html'
         self.post = {}
     
     def getip(self):
@@ -29,6 +30,16 @@ class PyFlare(object):
         self.record = 'record'
         return cfg_item
 
+    def callapi(self, post):
+        url = 'https://www.cloudflare.com/api_json.html'
+        try:
+            r = requests.post(url, json.dumps(post))
+        except Exception as e:
+            print 'Could not POST update, Reason: {}'.format(e)
+            sleep(5)
+            r = requests.post(url, json.dumps(post))
+        
+    
     def rec_edit(self):
         post = {
         'a': 'rec_edit',
