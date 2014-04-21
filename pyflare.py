@@ -30,7 +30,7 @@ class PyFlare(object):
         self.email = config.get('account', 'email')
         self.zone = config.get('dns', 'zone')
         self.record = config.get('dns', 'record')
-        return cfg_item
+        return self
 
     def callapi(self, post):
         url = 'https://www.cloudflare.com/api_json.html'
