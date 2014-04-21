@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import ConfigParser
 import unittest
 import requests
 import json
@@ -12,7 +13,7 @@ class PyFlare(object):
     """
     
     def __init__(self):
-        self.tkn = None
+        self.key = None
         self.email = None
         self.a = None # API uses this for determining the request type
         self.post = {}
@@ -21,13 +22,14 @@ class PyFlare(object):
         ip = requests.get('http://icanhazip.com').text.rstrip('\n')
         return ip
     
-    def loadcfg(self, cfg=None):
+    def loadcfg(self):
         '''Opens config file and returns cfg for key passed in'''
-        cfg = cfg
-        self.tkn = 'api_key'
-        self.email = 'email'
-        self.zone = 'zone'
-        self.record = 'record'
+        config = ConfigParser.ConfigParser()
+        config.read("./pyflare.conf")
+        self.key = config.get('account', 'api_key')
+        self.email = config.get('account', 'email')
+        self.zone = config.get('dns', 'zone')
+        self.record = config.get('dns', 'record')
         return cfg_item
 
     def callapi(self, post):
@@ -43,7 +45,7 @@ class PyFlare(object):
     def rec_edit(self):
         post = {
         'a': 'rec_edit',
-        'tkn': self.tkn,
+        'tkn': self.key,
         'id': '', #dns record id
         'email': self.email,
         'z': self.zone,
@@ -58,7 +60,7 @@ class PyFlare(object):
     def rec_load_all(self):
         post = {
         'a': 'rec_load_all',
-        'tkn': self.tkn,
+        'tkn': self.key,
         'email': self.email,
         'z': self.zone
         }
