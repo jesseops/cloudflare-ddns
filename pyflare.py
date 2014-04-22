@@ -18,6 +18,9 @@ class PyFlare(object):
         self.a = None # API uses this for determining the request type
         self.post = {}
     
+    def run(self):
+        pass
+    
     def getip(self):
         ip = requests.get('http://icanhazip.com').text.rstrip('\n')
         return ip
@@ -38,15 +41,16 @@ class PyFlare(object):
             requests.post(url, json.dumps(post))
         except Exception as e:
             print 'Could not POST update, Reason: {}'.format(e)
-            sleep(5)
-            requests.post(url, json.dumps(post))
+    
+    def parsejson(self, raw):
         
+        return flareid
     
     def rec_edit(self):
         post = {
         'a': 'rec_edit',
         'tkn': self.key,
-        'id': '', #dns record id
+        'id': '',
         'email': self.email,
         'z': self.zone,
         'type': 'A',
