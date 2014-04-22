@@ -50,21 +50,24 @@ class PyFlare(object):
         elif req == 'rec_load_all':
             post = self.rec_load_all()
         try:
-            response = requests.post(url, json.dumps(post), headers=headers)
+            data = json.dumps(post)
+            response = requests.post(url, data=post)
         except Exception as e:
             print 'Could not POST update, Reason: {}'.format(e)
         else:
-            return response
+            print 'Successfully made POST request, Response: {}'.format(response.json())
+            return response.json()
     
     def getrec_id(self, raw):
-        rec_id = [x['rec_id'] for x in raw['response']['recs']['objs']['rec_id'] if x['name'] == str(self.record + '.' + self.zone)]
-        return rec_id
+        self.rec_id = [x['rec_id'] for x in raw['response']['recs']['objs'] if x['display_name'] == self.record][0]
+        print 'Got rec id {}'.format(self.rec_id)
     
     def rec_edit(self):
         post = {
         'a': 'rec_edit',
+        'act': 'rec_edit',
         'tkn': self.key,
-        'id': '',
+        'id': self.rec_id,
         'email': self.email,
         'z': self.zone,
         'type': 'A',
@@ -73,15 +76,18 @@ class PyFlare(object):
         'service_mode': '1',
         'ttl': '1'
         }
+        print 'Got POST: {}'.format(post)
         return post
     
     def rec_load_all(self):
         post = {
         'a': 'rec_load_all',
+        'act': 'rec_load_all',
         'tkn': self.key,
         'email': self.email,
         'z': self.zone
         }
+        print 'Got POST: {}'.format(post)        
         return post
 
 
