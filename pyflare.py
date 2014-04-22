@@ -17,29 +17,38 @@ class PyFlare(object):
         self.email = None
         self.a = None # API uses this for determining the request type
         self.post = {}
-        self.rec_id = self.getrec_id(self.callapi(req='rec_load_all'))
+        self.rec_id = None
+        self.run()
     
     def run(self):
+        while True:
+            self.loadcfg()
+            self.rec_id = self.getrec_id(self.callapi(req='rec_load_all'))
+            self.callapi(req='rec_edit')
+            sleep(300)
         
-        pass
-    
+
     def getip(self):
         ip = requests.get('http://icanhazip.com').text.rstrip('\n')
         return ip
     
     def loadcfg(self):
         '''Opens config file and returns cfg for key passed in'''
-        config = ConfigParser.ConfigParser()
-        config.read("/etc/pyflare.conf")
-        self.key = config.get('account', 'api_key')
-        self.email = config.get('account', 'email')
-        self.zone = config.get('dns', 'zone')
-        self.record = config.get('dns', 'record')
+        cfg = ConfigParser.ConfigParser()
+        cfg.read("/etc/pyflare.conf")
+        self.key = cfg.get('account', 'api_key')
+        self.email = cfg.get('account', 'email')
+        self.zone = cfg.get('dns', 'zone')
+        self.record = cfg.get('dns', 'record')
         return self
 
     def callapi(self, req=None):
         url = 'https://www.cloudflare.com/api_json.html'
         headers = {'content-type' : 'application/json'}
+        if req == 'rec_edit':
+            post = self.rec_edit()
+        elif req == 'rec_load_all':
+            post = self.rec_load_all()
         try:
             response = requests.post(url, json.dumps(post), headers=headers)
         except Exception as e:
@@ -85,4 +94,4 @@ class test_PyFlare(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    PyFlare()
