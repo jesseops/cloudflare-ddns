@@ -17,8 +17,10 @@ class PyFlare(object):
         self.email = None
         self.a = None # API uses this for determining the request type
         self.post = {}
+        self.rec_id = self.getrec_id(self.callapi(req='rec_load_all'))
     
     def run(self):
+        
         pass
     
     def getip(self):
@@ -28,14 +30,14 @@ class PyFlare(object):
     def loadcfg(self):
         '''Opens config file and returns cfg for key passed in'''
         config = ConfigParser.ConfigParser()
-        config.read("./pyflare.conf")
+        config.read("/etc/pyflare.conf")
         self.key = config.get('account', 'api_key')
         self.email = config.get('account', 'email')
         self.zone = config.get('dns', 'zone')
         self.record = config.get('dns', 'record')
         return self
 
-    def callapi(self, post):
+    def callapi(self, req=None):
         url = 'https://www.cloudflare.com/api_json.html'
         headers = {'content-type' : 'application/json'}
         try:
@@ -43,11 +45,11 @@ class PyFlare(object):
         except Exception as e:
             print 'Could not POST update, Reason: {}'.format(e)
         else:
-            self.parsejson(response)
+            return response
     
-    def parsejson(self, raw):
-        
-        return flareid
+    def getrec_id(self, raw):
+        rec_id = [x['rec_id'] for x in raw['response']['recs']['objs']['rec_id'] if x['name'] == str(self.record + '.' + self.zone)]
+        return rec_id
     
     def rec_edit(self):
         post = {
