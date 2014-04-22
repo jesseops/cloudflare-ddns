@@ -59,8 +59,9 @@ class PyFlare(object):
             return response.json()
     
     def getrec_id(self, raw):
-        self.rec_id = [x['rec_id'] for x in raw['response']['recs']['objs'] if x['display_name'] == self.record][0]
+        self.rec_id = [x['rec_id'] for x in raw['response']['recs']['objs'] if x['display_name'] == self.record]
         print 'Got rec id {}'.format(self.rec_id)
+        return self.rec_id
     
     def rec_edit(self):
         post = {
