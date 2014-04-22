@@ -37,10 +37,13 @@ class PyFlare(object):
 
     def callapi(self, post):
         url = 'https://www.cloudflare.com/api_json.html'
+        headers = {'content-type' : 'application/json'}
         try:
-            requests.post(url, json.dumps(post))
+            response = requests.post(url, json.dumps(post), headers=headers)
         except Exception as e:
             print 'Could not POST update, Reason: {}'.format(e)
+        else:
+            self.parsejson(response)
     
     def parsejson(self, raw):
         
