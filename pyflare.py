@@ -22,20 +22,21 @@ class PyFlare(object):
     
     def run(self):
         while True:
-            self.loadcfg()
-            self.rec_id = self.getrec_id(self.callapi(req='rec_load_all'))
-            self.callapi(req='rec_edit')
+            self.loadcfg()  # Access config file
+            self.rec_id = self.getrec_id(self.callapi(req='rec_load_all'))  # Load current record id from cloudflare
+            self.callapi(req='rec_edit')  # POST record update to Cloudflare
             sleep(300)
         
 
     def getip(self):
+    '''Gets external IP address and strips to plain string'''
         ip = requests.get('http://icanhazip.com').text.rstrip('\n')
         return ip
     
     def loadcfg(self):
         '''Opens config file and returns cfg for key passed in'''
         cfg = ConfigParser.ConfigParser()
-        cfg.read("/etc/pyflare.conf")
+        cfg.read("/etc/pyflare.conf")  # Expected location, make sure you have access here!
         self.key = cfg.get('account', 'api_key')
         self.email = cfg.get('account', 'email')
         self.zone = cfg.get('dns', 'zone')
