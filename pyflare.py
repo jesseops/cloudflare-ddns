@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import ConfigParser
+import logging
 import unittest
 import requests
 import json
@@ -18,19 +19,21 @@ class PyFlare(object):
         self.a = None # API uses this for determining the request type
         self.post = {}
         self.rec_id = None
-        self.run()
     
     def run(self):
         while True:
+            logging.info('Starting up')
             self.loadcfg()  # Access config file
             self.rec_id = self.getrec_id(self.callapi(req='rec_load_all'))  # Load current record id from cloudflare
             self.callapi(req='rec_edit')  # POST record update to Cloudflare
+            logging.info('Sleeping for 5 minutes')
             sleep(300)
         
 
     def getip(self):
-    '''Gets external IP address and strips to plain string'''
+        '''Gets external IP address and strips to plain string'''
         ip = requests.get('http://icanhazip.com').text.rstrip('\n')
+        logging.info('Got current IP - {}'.format(ip))
         return ip
     
     def loadcfg(self):
@@ -54,14 +57,14 @@ class PyFlare(object):
             data = json.dumps(post)
             response = requests.post(url, data=post)
         except Exception as e:
-            print 'Could not POST update, Reason: {}'.format(e)
+            logging.warning('Could not POST update, Reason: {}'.format(e))
         else:
-            print 'Successfully made POST request, Response: {}'.format(response.json())
+            logging.info('Successfully made POST request, Response: {}'.format(response.json()))
             return response.json()
     
     def getrec_id(self, raw):
         self.rec_id = [x['rec_id'] for x in raw['response']['recs']['objs'] if x['display_name'] == self.record]
-        print 'Got rec id {}'.format(self.rec_id)
+        logging.info('Got rec id {}'.format(self.rec_id))
         return self.rec_id
     
     def rec_edit(self):
@@ -78,7 +81,7 @@ class PyFlare(object):
         'service_mode': '1',
         'ttl': '1'
         }
-        print 'Got POST: {}'.format(post)
+        logging.info('Got POST: {}'.format(post))
         return post
     
     def rec_load_all(self):
@@ -89,7 +92,7 @@ class PyFlare(object):
         'email': self.email,
         'z': self.zone
         }
-        print 'Got POST: {}'.format(post)        
+        logging.info('Got POST: {}'.format(post))        
         return post
 
 
@@ -102,4 +105,4 @@ class test_PyFlare(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    PyFlare()
+    PyFlare().run()
