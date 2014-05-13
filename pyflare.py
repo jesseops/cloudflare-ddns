@@ -22,6 +22,7 @@ class PyFlare(object):
     
     def run(self):
         while True:
+            self.setlogging()  # Enable logging
             logging.info('Starting up')
             self.loadcfg()  # Access config file
             self.rec_id = self.getrec_id(self.callapi(req='rec_load_all'))  # Load current record id from cloudflare
@@ -31,13 +32,17 @@ class PyFlare(object):
         
 
     def getip(self):
-        '''Gets external IP address and strips to plain string'''
+        """
+        Gets external IP address and strips to plain string
+        """
         ip = requests.get('http://icanhazip.com').text.rstrip('\n')
         logging.info('Got current IP - {}'.format(ip))
         return ip
     
     def loadcfg(self):
-        '''Opens config file and returns cfg for key passed in'''
+        """
+        Opens config file and returns cfg for key passed in
+        """
         cfg = ConfigParser.ConfigParser()
         cfg.read("/etc/pyflare.conf")  # Expected location, make sure you have access here!
         self.key = cfg.get('account', 'api_key')
@@ -45,6 +50,9 @@ class PyFlare(object):
         self.zone = cfg.get('dns', 'zone')
         self.record = cfg.get('dns', 'record')
         return self
+
+    def setlogging(self):
+        logging.basicConfig(filename='pyflare.log', level=logging.DEBUG)
 
     def callapi(self, req=None):
         url = 'https://www.cloudflare.com/api_json.html'
@@ -69,28 +77,28 @@ class PyFlare(object):
     
     def rec_edit(self):
         post = {
-        'a': 'rec_edit',
-        'act': 'rec_edit',
-        'tkn': self.key,
-        'id': self.rec_id,
-        'email': self.email,
-        'z': self.zone,
-        'type': 'A',
-        'name': self.record,
-        'content': self.getip(),
-        'service_mode': '1',
-        'ttl': '1'
+            'a': 'rec_edit',
+            'act': 'rec_edit',
+            'tkn': self.key,
+            'id': self.rec_id,
+            'email': self.email,
+            'z': self.zone,
+            'type': 'A',
+            'name': self.record,
+            'content': self.getip(),
+            'service_mode': '1',
+            'ttl': '1'
         }
         logging.info('Got POST: {}'.format(post))
         return post
     
     def rec_load_all(self):
         post = {
-        'a': 'rec_load_all',
-        'act': 'rec_load_all',
-        'tkn': self.key,
-        'email': self.email,
-        'z': self.zone
+            'a': 'rec_load_all',
+            'act': 'rec_load_all',
+            'tkn': self.key,
+            'email': self.email,
+            'z': self.zone
         }
         logging.info('Got POST: {}'.format(post))        
         return post
