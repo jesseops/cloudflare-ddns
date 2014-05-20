@@ -1,3 +1,6 @@
+Python Cloudflare DDNS updater
+=======
+
 ______     ______ _
 | ___ \    |  ___| |
 | |_/ /   _| |_  | | __ _ _ __ ___
@@ -5,9 +8,8 @@ ______     ______ _
 | |  | |_| | |   | | (_| | | |  __/
 \_|   \__, \_|   |_|\__,_|_|  \___|
        __/ |
-      |___/  
+      |___/
 
-Python Cloudflare DDNS updater
 
 This app is designed to act as a Dynamic DNS updater for Cloudflare. To use, you need:
 
