@@ -16,7 +16,7 @@ class PyFlare(object):
     def __init__(self):
         self.key = None
         self.email = None
-        self.a = None # API uses this for determining the request type
+        self.a = None   # API uses this for determining the request type
         self.post = {}
         self.rec_id = None
     
@@ -52,11 +52,11 @@ class PyFlare(object):
         return self
 
     def setlogging(self):
-        logging.basicConfig(filename='pyflare.log', level=logging.DEBUG)
+        logging.basicConfig(filename='/var/log/pyflare.log', level=logging.DEBUG)
 
     def callapi(self, req=None):
         url = 'https://www.cloudflare.com/api_json.html'
-        headers = {'content-type' : 'application/json'}
+        headers = {'content-type': 'application/json'}
         if req == 'rec_edit':
             post = self.rec_edit()
         elif req == 'rec_load_all':
@@ -65,14 +65,14 @@ class PyFlare(object):
             data = json.dumps(post)
             response = requests.post(url, data=post)
         except Exception as e:
-            logging.warning('Could not POST update, Reason: {}'.format(e))
+            logging.warning('API Call Unsuccessful, Reason: {}'.format(e))
         else:
-            logging.info('Successfully made POST request, Response: {}'.format(response.json()))
+            logging.info('API Call Successful: {}'.format(req))
             return response.json()
     
     def getrec_id(self, raw):
         self.rec_id = [x['rec_id'] for x in raw['response']['recs']['objs'] if x['display_name'] == self.record]
-        logging.info('Got rec id {}'.format(self.rec_id))
+        logging.info('Got Record ID {}'.format(self.rec_id))
         return self.rec_id
     
     def rec_edit(self):
@@ -89,7 +89,7 @@ class PyFlare(object):
             'service_mode': '1',
             'ttl': '1'
         }
-        logging.info('Got POST: {}'.format(post))
+        logging.debug('Built rec_edit POST: {}'.format(post))
         return post
     
     def rec_load_all(self):
@@ -100,7 +100,7 @@ class PyFlare(object):
             'email': self.email,
             'z': self.zone
         }
-        logging.info('Got POST: {}'.format(post))        
+        logging.debug('Built rec_load_all POST: {}'.format(post))
         return post
 
 
