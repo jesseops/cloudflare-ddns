@@ -1,9 +1,11 @@
+import json
 
 
 class ApiTools(object):
     """
     Provides tools for working with the CloudFlare API
     """
+
 
 class JsonTemplates(object):
     """
