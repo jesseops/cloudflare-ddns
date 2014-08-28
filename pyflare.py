@@ -1,11 +1,9 @@
-#!/usr/bin/env python
-
 import ConfigParser
 import logging
-import unittest
 import requests
 import json
 from time import sleep
+from workers import WS
 
 
 class PyFlare(object):
@@ -29,7 +27,6 @@ class PyFlare(object):
             self.callapi(req='rec_edit')  # POST record update to Cloudflare
             logging.info('Sleeping for 5 minutes')
             sleep(300)
-        
 
     def getip(self):
         """
@@ -102,15 +99,3 @@ class PyFlare(object):
         }
         logging.debug('Built rec_load_all POST: {}'.format(post))
         return post
-
-
-# ------ Unittesting ------ #
-
-class test_PyFlare(unittest.TestCase):
-
-    def test_getip(self):
-        self.assertRegexpMatches(PyFlare().getip(), "^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
-
-
-if __name__ == '__main__':
-    PyFlare().run()
