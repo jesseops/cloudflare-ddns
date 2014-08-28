@@ -1,5 +1,5 @@
 import unittest
-from pyflare import PyFlare
+from pyflareOLD import PyFlare
 
 
 class test_PyFlare(unittest.TestCase):

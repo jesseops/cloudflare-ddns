@@ -1,1 +1,1 @@
-from pyflare import PyFlare
+from main import PyFlare
