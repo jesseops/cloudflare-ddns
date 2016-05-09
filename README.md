@@ -10,7 +10,7 @@ This app is designed to act as a Dynamic DNS updater for Cloudflare. To use, you
 Usage:
 
 - Clone this repo
-- cd to PyFlare
+- cd to cloudflare-ddns
 - chmod +x pyflare.py
 - cp pyflare.conf to /etc/pyflare.conf
 - chown /etc/pyflare.conf to your user
@@ -25,6 +25,6 @@ Config Example:
 
 This will update the A record for foo.bar.com to the current external IP address.
 
-Then simply run ./pyflare.conf.
+Then simply run ./pyflare.py.
 
 You should see output indicating successful loading of cloudflare information, then successful POST of your IP update. PyFlare will then sleep for 300 seconds and update again.
